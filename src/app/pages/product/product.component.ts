@@ -27,6 +27,9 @@ export class ProductComponent implements OnInit {
 
   selectedProducts: Product[] = [];
 
+  searchResultProducts: Product[] = [];
+  searchTotal!: number;
+
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
@@ -61,7 +64,7 @@ export class ProductComponent implements OnInit {
     sortOrder: string | undefined,
     filter: Array<{ key: string; value: string[] }>) {
 
-    this.productService.getProducts(pageIndex, pageSize, sortField, sortOrder, '', filter)
+    this.productService.getProducts(pageIndex, pageSize, sortField, sortOrder, filter)
       .subscribe(data => {
         console.log(data)
         this.loading = false;
@@ -113,9 +116,17 @@ export class ProductComponent implements OnInit {
   }
 
   search() {
-    const { name, type } = this.searchQuery
-    console.log(`${name} ${type}`);
-    this.getProducts(this.pageIndex, this.pageSize, undefined, undefined, [this.searchQuery]);
+    const { productName, productType } = this.searchQuery
+    const name = `name:${productName}`
+    const type = `type:${productType}`
+    console.log(`${productName} ${productType} ${this.searchQuery}`);
+    this.productService.search(this.pageIndex, this.pageSize, undefined, undefined, productName,productType)
+      .subscribe(data => {
+        console.log(data)
+        this.loading = false;
+        this.total = data.page.totalPages
+        this.products = data._embedded.productDTOList
+      });
   }
 
   buyProducts() {

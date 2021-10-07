@@ -43,7 +43,50 @@
     </div>
   </div>
 </form>
-<div nz-row [nzGutter]="16">
+
+
+<div nz-row [nzGutter]="16" *ngIf="searchResultProducts && searchResultProducts.length>0; else elseBlock">
+  <div nz-col nzSpan="16">
+    <nz-card nzTitle="Products" [nzExtra]="extraTemplate">
+      <nz-table #searchProductTable [nzData]="searchResultProducts" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
+        [nzTotal]="searchTotal" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+        (nzQueryParams)="onQueryParamsChange($event)">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of searchProductTable.data;let i=index">
+            <td>{{i+1}}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.type }}</td>
+            <td>{{ product.description }}</td>
+            <td>
+              <!-- <a [routerLink]="['./',product.id]"><i nz-icon nzType="eye" nzTheme="outline"></i> Detail</a>
+              <nz-divider nzType="vertical"></nz-divider> -->
+              <button nz-button nzSize="small" (click)="addToBasket(product)"><i nz-icon nzType="plus"
+                  nzTheme="outline"></i>Add cart</button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="8">
+    <nz-card nzTitle="Basket" >
+      <app-basket *ngFor="let product of selectedProducts" [product]="product"
+        (removeProduct)="onDeleteFromBasket($event)"></app-basket>
+    </nz-card>
+  </div>
+</div>
+<ng-template #elseBlock>
+
+<div nz-row [nzGutter]="16" >
   <div nz-col nzSpan="16">
     <nz-card nzTitle="Products" [nzExtra]="extraTemplate">
       <nz-table #productsTable [nzData]="products" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
@@ -77,11 +120,13 @@
   </div>
   <div nz-col nzSpan="8">
     <nz-card nzTitle="Basket" *ngIf="selectedProducts && selectedProducts.length>0" [nzExtra]="basketTemplate">
-      <app-basket *ngFor="let product of selectedProducts" [product]="product" (removeProduct)="onDeleteFromBasket($event)"></app-basket>
+      <app-basket *ngFor="let product of selectedProducts" [product]="product"
+        (removeProduct)="onDeleteFromBasket($event)"></app-basket>
     </nz-card>
   </div>
 </div>
-
+  
+</ng-template>
 <ng-template #extraTemplate>
 
   <a routerLink="/share/create" nz-button nzType="primary">
@@ -92,8 +137,9 @@
 
 <ng-template #basketTemplate>
 
-  <a routerLink="/share/create" nz-button nzType="primary">
+  <!-- <a routerLink="/share/create" nz-button nzType="primary">
     <i nz-icon nzType="send"></i>
    Buy
-  </a>
+  </a> -->
+  <button nz-button (click)="buyProducts()"> <i nz-icon nzType="send"></i>Buy </button>
 </ng-template>
