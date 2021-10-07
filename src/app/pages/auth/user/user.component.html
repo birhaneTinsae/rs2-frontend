@@ -1,0 +1,58 @@
+<nz-page-header class="site-page-header" nzTitle="Products" nzSubtitle="The list of products  ">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['../']">RS2</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      Products
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</nz-page-header>
+
+<div nz-row [nzGutter]="16">
+  <div nz-col nzSpan="16">
+    <nz-card nzTitle="Users" [nzExtra]="extraTemplate">
+      <nz-table #usersTable [nzData]="users" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
+        [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+        (nzQueryParams)="onQueryParamsChange($event)">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th nzColumnKey="firstName" [nzSortFn]="true">Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usersTable.data;let i=index">
+            <td>{{i+1}}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>
+              <a [routerLink]="['./',user.id]"><i nz-icon nzType="eye" nzTheme="outline"></i> Detail</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <!-- <a>Payment</a> -->
+              <button nz-button nzSize="small" ><i nz-icon nzType="eye"
+                  nzTheme="outline"></i>Payment</button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="8">
+    <nz-card >
+
+    </nz-card>
+  </div>
+</div>
+
+<ng-template #extraTemplate>
+
+  <a routerLink="/share/create" nz-button nzType="primary">
+    <i nz-icon nzType="plus"></i>
+    Create
+  </a>
+</ng-template>

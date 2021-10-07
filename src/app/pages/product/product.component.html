@@ -1,0 +1,99 @@
+<nz-page-header class="site-page-header" nzTitle="Products" nzSubtitle="The list of products  ">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['../']">RS2</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      Products
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</nz-page-header>
+
+<form nz-form [formGroup]="searchForm" (submit)="search()" class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="4">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your username!">
+          <nz-input-group nzPrefixIcon="user">
+            <input formControlName="productName" nz-input placeholder="Product Name" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]='12'>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your Password!">
+          <nz-select formControlName="productType">
+            <nz-option nzValue="MUSIC" nzLabel="Music"></nz-option>
+            <nz-option nzValue="BOOK" nzLabel="Book"></nz-option>
+            <nz-option nzValue="GAME" nzLabel="Game"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'primary'">Search</button>
+      <button nz-button (click)="resetForm()">Clear</button>
+      <a class="collapse" (click)="toggleCollapse()">
+        Collapse
+        <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
+      </a>
+    </div>
+  </div>
+</form>
+<div nz-row [nzGutter]="16">
+  <div nz-col nzSpan="16">
+    <nz-card nzTitle="Products" [nzExtra]="extraTemplate">
+      <nz-table #productsTable [nzData]="products" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
+        [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
+        (nzQueryParams)="onQueryParamsChange($event)">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of productsTable.data;let i=index">
+            <td>{{i+1}}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.type }}</td>
+            <td>{{ product.description }}</td>
+            <td>
+              <!-- <a [routerLink]="['./',product.id]"><i nz-icon nzType="eye" nzTheme="outline"></i> Detail</a>
+              <nz-divider nzType="vertical"></nz-divider> -->
+              <button nz-button nzSize="small" (click)="addToBasket(product)"><i nz-icon nzType="plus"
+                  nzTheme="outline"></i>Add cart</button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="8">
+    <nz-card nzTitle="Basket" *ngIf="selectedProducts && selectedProducts.length>0" [nzExtra]="basketTemplate">
+      <app-basket *ngFor="let product of selectedProducts" [product]="product" (removeProduct)="onDeleteFromBasket($event)"></app-basket>
+    </nz-card>
+  </div>
+</div>
+
+<ng-template #extraTemplate>
+
+  <a routerLink="/share/create" nz-button nzType="primary">
+    <i nz-icon nzType="plus"></i>
+    Create
+  </a>
+</ng-template>
+
+<ng-template #basketTemplate>
+
+  <a routerLink="/share/create" nz-button nzType="primary">
+    <i nz-icon nzType="send"></i>
+   Buy
+  </a>
+</ng-template>
