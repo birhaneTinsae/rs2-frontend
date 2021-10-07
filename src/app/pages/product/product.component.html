@@ -13,7 +13,7 @@
   <div nz-row [nzGutter]="4">
     <div nz-col [nzSpan]="12">
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your username!">
+        <nz-form-control nzErrorTip="Please input product name!">
           <nz-input-group nzPrefixIcon="user">
             <input formControlName="productName" nz-input placeholder="Product Name" />
           </nz-input-group>
@@ -22,7 +22,7 @@
     </div>
     <div nz-col [nzSpan]='12'>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your Password!">
+        <nz-form-control nzErrorTip="Please select  product type!">
           <nz-select formControlName="productType">
             <nz-option nzValue="MUSIC" nzLabel="Music"></nz-option>
             <nz-option nzValue="BOOK" nzLabel="Book"></nz-option>
@@ -34,7 +34,7 @@
   </div>
   <div nz-row>
     <div nz-col [nzSpan]="24" class="search-area">
-      <button nz-button [nzType]="'primary'">Search</button>
+      <button nz-button [nzType]="'primary'" [disabled]='!searchForm.valid'>Search</button>
       <button nz-button (click)="resetForm()">Clear</button>
       <a class="collapse" (click)="toggleCollapse()">
         Collapse
@@ -47,7 +47,7 @@
 
 <div nz-row [nzGutter]="16" *ngIf="searchResultProducts && searchResultProducts.length>0; else elseBlock">
   <div nz-col nzSpan="16">
-    <nz-card nzTitle="Products" [nzExtra]="extraTemplate">
+    <nz-card nzTitle="Products">
       <nz-table #searchProductTable [nzData]="searchResultProducts" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
         [nzTotal]="searchTotal" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
         (nzQueryParams)="onQueryParamsChange($event)">
@@ -88,7 +88,7 @@
 
 <div nz-row [nzGutter]="16" >
   <div nz-col nzSpan="16">
-    <nz-card nzTitle="Products" [nzExtra]="extraTemplate">
+    <nz-card nzTitle="Products" >
       <nz-table #productsTable [nzData]="products" nzShowSizeChanger [nzFrontPagination]="false" [nzLoading]="loading"
         [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
         (nzQueryParams)="onQueryParamsChange($event)">
@@ -127,13 +127,13 @@
 </div>
   
 </ng-template>
-<ng-template #extraTemplate>
+<!-- <ng-template #extraTemplate>
 
   <a routerLink="/share/create" nz-button nzType="primary">
     <i nz-icon nzType="plus"></i>
     Create
   </a>
-</ng-template>
+</ng-template> -->
 
 <ng-template #basketTemplate>
 

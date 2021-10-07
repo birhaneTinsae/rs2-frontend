@@ -40,8 +40,8 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
-      productName: [],
-      productType: []
+      productName: [null, [Validators.required]],
+      productType: [null, [Validators.required]]
     });
     this.productForm = this.fb.group({
 
@@ -117,15 +117,17 @@ export class ProductComponent implements OnInit {
 
   search() {
     const { productName, productType } = this.searchQuery
-    const name = `name:${productName}`
-    const type = `type:${productType}`
     console.log(`${productName} ${productType} ${this.searchQuery}`);
-    this.productService.search(this.pageIndex, this.pageSize, undefined, undefined, productName,productType)
+    this.productService.search(this.pageIndex, this.pageSize, undefined, undefined, productName, productType)
       .subscribe(data => {
-        console.log(data)
-        this.loading = false;
+       if(data._embedded){
         this.total = data.page.totalPages
         this.products = data._embedded.productDTOList
+       }else{
+         this.createNotification('error','NO Result','Cant find any thing with this crietria')
+       }
+        this.loading = false;
+       
       });
   }
 
